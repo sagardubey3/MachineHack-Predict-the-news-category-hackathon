@@ -17,7 +17,7 @@ stop_words = stopwords.words('english')
 from keras.layers import Flatten, Conv1D, MaxPooling1D, Dropout, Activation
 
 
-train=pd.read_excel(r'C:\Users\sagar\Downloads\Participants_Data_News_category-20190729T063600Z-001\Participants_Data_News_category\Data.xlsx')
+train=pd.read_excel('Data.xlsx')
 train.head()
 
 xtrain, xvalid, ytrain, yvalid = train_test_split(train['Processed_article'].values, train['SECTION'], 
@@ -26,7 +26,7 @@ xtrain, xvalid, ytrain, yvalid = train_test_split(train['Processed_article'].val
                                                   test_size=0.1, shuffle=True)
      
 #EMBEDDING
-EMBEDDING_FILE = 'D:/Study/glove.840B.300d/glove.840B.300d.txt'
+EMBEDDING_FILE = 'glove.840B.300d.txt'
 def get_coefs(word,*arr):
     return word, np.asarray(arr, dtype='float32')
 embeddings_index = dict(get_coefs(*o.split(" ")) for o in open(EMBEDDING_FILE,encoding='utf8'))
@@ -112,13 +112,13 @@ model.fit(xtrain_pad, y=ytrain_enc, batch_size=512, epochs=5,
 
 
 
-test = pd.read_excel(r'C:\Users\sagar\Downloads\Participants_Data_News_category-20190729T063600Z-001\Participants_Data_News_category\Data_Test.xlsx')
+test = pd.read_excel('Data_Test.xlsx')
 
 seq = token.texts_to_sequences(test['STORY'])
 padded = pad_sequences(seq, maxlen=70)
 pred=model.predict_classes(padded)
 
 submission = pd.DataFrame({'SECTION':pred})
-submission.to_excel(r'C:\Users\sagar\Downloads\Participants_Data_News_category-20190729T063600Z-001\Participants_Data_News_category\submission5.xlsx', index=False)
+submission.to_excel('submission5.xlsx', index=False)
 
 
